@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 
-const mainMenu = [
+const menu = [
     {
         type: 'list',
         message: 'What would you like to do?',
@@ -57,4 +57,16 @@ const employee = [
         message: 'Who is the emplyee\'s manager?',
         name: 'manager'
     }
-]
+];
+
+const mainMenu = () => {
+    inquirer
+        .prompt(menu)
+        .then(response => {
+            console.log(response);
+        })
+};
+
+module.exports = {
+    mainMenu
+}
