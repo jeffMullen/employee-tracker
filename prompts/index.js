@@ -64,8 +64,20 @@ const mainMenu = () => {
         .prompt(menu)
         .then(response => {
             console.log(response);
+            if (response.menu === 'Add a department') {
+                addDepartment();
+            }
         })
 };
+
+const addDepartment = () => {
+    inquirer
+        .prompt(department)
+        .then(response => {
+            console.log(response);
+        })
+};
+
 
 module.exports = {
     mainMenu
