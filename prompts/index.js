@@ -67,6 +67,10 @@ const mainMenu = () => {
             console.log(response);
             if (response.menu === 'Add a department') {
                 addDepartment();
+            } else if (response.menu === 'Add a role') {
+                addRole();
+            } else if (response.menu === 'Add an employee') {
+                addEmployee();
             }
         })
 };
@@ -79,6 +83,21 @@ const addDepartment = () => {
         })
 };
 
+const addRole = () => {
+    inquirer
+        .prompt(role)
+        .then(response => {
+            console.log(response);
+        })
+}
+
+const addEmployee = () => {
+    inquirer
+        .prompt(employee)
+        .then(response => {
+            console.log(response);
+        })
+}
 
 module.exports = {
     mainMenu
