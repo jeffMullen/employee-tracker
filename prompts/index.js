@@ -33,6 +33,7 @@ const role = [
         message: 'Which department does this role belong to?',
         name: 'departmentRole'
         // Add validation to only allow current departments
+        // List departments and corresponding ids so it's easy to see what exists
     }
 ];
 
