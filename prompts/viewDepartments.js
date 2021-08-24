@@ -1,8 +1,12 @@
-const db = require('../config/connection');
+const tools = require('../config/connection');
 
 
 const viewDepartments = () => {
-    console.log(db);
+    tools.db.query(`SELECT department.name AS Department, department.id AS Id FROM department`, (err, results) => {
+        err
+            ? console.error(err)
+            : console.table(results);
+    });
 }
 
 module.exports = viewDepartments;
