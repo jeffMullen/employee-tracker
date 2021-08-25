@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const tools = require('../config/connection');
+const employeesDB = require('../db/employeeDB');
 
 const department = [
     {
@@ -13,12 +14,12 @@ const addDepartment = () => {
     inquirer
         .prompt(department)
         .then(response => {
-            console.log(response);
-            tools.db.query(`INSERT INTO department(name)
-            VALUES (?)`, response.department, (err) => {
-                err
-                    ? console.log(err)
-                    : console.log('Department added!')
+            const name = response.department;
+
+            employeesDB.addingDepartment(name).then(data => {
+                if (data[0].affectedRows) {
+                    console.log('Department added!');
+                }
             })
         })
 };
