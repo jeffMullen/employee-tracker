@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const tools = require('../config/connection');
 
 const department = [
     {
@@ -13,6 +14,12 @@ const addDepartment = () => {
         .prompt(department)
         .then(response => {
             console.log(response);
+            tools.db.query(`INSERT INTO department(name)
+            VALUES (?)`, response.department, (err) => {
+                err
+                    ? console.log(err)
+                    : console.log('Department added!')
+            })
         })
 };
 
