@@ -41,25 +41,8 @@ class EmployeesDB {
         return this.connection.promise().query(`SELECT department.name FROM department`)
     }
 
-    parsingRoleDepartment() {
-        console.log('IN THE METHOD PARSING ROLE DEPARTMENT');
-        return this.connection.promise().query(`SELECT * FROM department`)
-        //  results => {
-        //     console.log('HITTING THIS FUNCION')
-        //     for (let i = 0; i < results.length; i++) {
-        //         if (department === results[i].name) {
-        //             department = results[i].id;
-        //         }
-        //     }
-        //     return department;
-        // });
-
-        return departmentId;
-
-        console.log(departmentId);
-        console.log('CLASS METHOD');
-        // return this.connection.promise().query(`INSERT INTO role(role.title, role.salary, department.name JOIN department ON role.department_id = department.id) VALUES(?,?,?)`, [role, salary, department]);
-        return;
+    addingRole(role, salary, departmentId) {
+        return this.connection.promise().query(`INSERT INTO role(role.title, role.salary, role.department_id) VALUES(?,?,?)`, [role, salary, departmentId]);
     }
 }
 

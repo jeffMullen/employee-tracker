@@ -31,29 +31,30 @@ const rolePrompt = (departmentChoices) => {
     inquirer
         .prompt(role)
         .then(response => {
-            console.log(response);
             const { role, salary, department } = response;
-
             let departmentId;
 
-            employeesDB.parsingRoleDepartment(response).then(data => {
-                console.log(data[0][0].name);
-                console.log('HITTING THIS FUNCION')
-                console.log(`Department: ${department}`);
-                for (let i = 0; i < data.length; i++) {
-                    if (department === data[0][i].name) {
-                        console.log('INSIDE THE LOOP')
-                        departmentId = data[0][i].id;
+            employeesDB.viewingDepartments().then(data => {
+                let newData = data[0];
+                for (let i = 0; i < newData.length; i++) {
+                    if (department === newData[i].Department) {
+                        departmentId = newData[i].Id;
+                        break;
                     }
                 }
-                console.log(departmentId);
-                // console.log(departmentId);
-                // employeesDB.addRole(role, salary, department).then(console.log('GOT TO THE END'));
-                // if (data[0].affectedRows) {
-                //     console.log('Role added!');
-                // }
+                finalEntry(role, salary, departmentId);
+
             })
         })
+}
+
+
+const finalEntry = (role, salary, departmentId) => {
+    employeesDB.addingRole(role, salary, departmentId).then(data => {
+        if (data[0].affectedRows) {
+            console.log('Role added!');
+        }
+    });
 }
 
 module.exports = addRole;
