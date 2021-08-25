@@ -4,6 +4,7 @@ const addRole = require('./role');
 const addEmployee = require('./employee');
 const viewDepartments = require('./viewDepartments');
 const viewRoles = require('./viewRoles');
+const viewEmployees = require('./viewEmployees');
 
 const menu = [
     {
@@ -23,6 +24,8 @@ const mainMenu = () => {
                 viewDepartments();
             } else if (response.menu === 'View all roles') {
                 viewRoles();
+            } else if (response.menu === 'View all employees') {
+                viewEmployees();
             } else if (response.menu === 'Add a department') {
                 addDepartment();
             } else if (response.menu === 'Add a role') {
