@@ -2,9 +2,7 @@ const inquirer = require('inquirer');
 const addDepartment = require('./department');
 const addRole = require('./role');
 const addEmployee = require('./employee');
-const viewDepartments = require('./viewDepartments');
-const viewRoles = require('./viewRoles');
-const viewEmployees = require('./viewEmployees');
+const tables = require('./viewTables');
 
 const menu = [
     {
@@ -21,11 +19,11 @@ const mainMenu = () => {
         .then(response => {
             console.log(response);
             if (response.menu === 'View all departments') {
-                viewDepartments();
+                tables.viewDepartments();
             } else if (response.menu === 'View all roles') {
-                viewRoles();
+                tables.viewRoles();
             } else if (response.menu === 'View all employees') {
-                viewEmployees();
+                tables.viewEmployees();
             } else if (response.menu === 'Add a department') {
                 addDepartment();
             } else if (response.menu === 'Add a role') {

@@ -1,5 +1,4 @@
 const inquirer = require('inquirer');
-const tools = require('../config/connection');
 const employeesDB = require('../db/employeeDB');
 
 const department = [
