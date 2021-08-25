@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const employeesDB = require('../db/employeeDB');
+const employeesDB = require('../db/employeesDB');
 
 const department = [
     {

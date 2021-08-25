@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
-const addDepartment = require('./department');
-const addRole = require('./role');
-const addEmployee = require('./employee');
+const addDepartment = require('./addDepartment');
+const addRole = require('./addRole');
+const addEmployee = require('./addEmployee');
 const tables = require('./viewTables');
 
 const menu = [

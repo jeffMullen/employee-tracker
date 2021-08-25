@@ -1,4 +1,4 @@
-const employeesDB = require('../db/employeeDB');
+const employeesDB = require('../db/employeesDB');
 
 
 const viewDepartments = () => {

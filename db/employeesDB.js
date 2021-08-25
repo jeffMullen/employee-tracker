@@ -41,8 +41,16 @@ class EmployeesDB {
         return this.connection.promise().query(`SELECT department.name FROM department`)
     }
 
+    getRoles() {
+        return this.connection.promise().query(`SELECT role.title FROM role`)
+    }
+
     addingRole(role, salary, departmentId) {
         return this.connection.promise().query(`INSERT INTO role(role.title, role.salary, role.department_id) VALUES(?,?,?)`, [role, salary, departmentId]);
+    }
+
+    addingEmployee(first, last, role, manager) {
+
     }
 }
 
