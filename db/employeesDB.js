@@ -21,17 +21,33 @@ class EmployeesDB {
         ON role.department_id = department.id`)
     }
 
+    // viewingEmployees() {
+    //     return this.connection.promise().query(`SELECT employee.id AS Id,
+    //     employee.first_name AS First,
+    //     employee.last_name AS Last,
+    //     role.title AS Title,
+    //     department.name AS Department,
+    //     role.salary AS Salary,
+    //     employee.manager_id AS Manager
+    //     FROM employee JOIN role ON employee.role_id = role.id
+    //     JOIN department ON role.id = department.id`)
+    // }
+
     viewingEmployees() {
-        return this.connection.promise().query(`SELECT employee.id AS id,
-        employee.first_name,
-        employee.last_name,
-        role.title AS title,
-        department.name AS department,
-        role.salary AS salary,
-        employee.manager_id AS manager
-        FROM employee JOIN role ON employee.role_id = role.id
-        JOIN department ON role.id = department.id`)
+        return this.connection.promise().query(`SELECT employee.id AS ID,
+        employee.first_name AS First,
+        employee.last_name AS Last,
+        role.title AS Role,
+        department.name AS Department,
+        role.salary AS Salary,
+        employee.manager_id AS Manager
+        FROM employee
+        JOIN role ON employee.role_id = role.id
+        JOIN department ON role.department_id = department.id`)
     }
+    // viewingEmployees() {
+    //     return this.connection.promise().query(`SELECT * FROM employee`);
+    // }
 
     addingDepartment(name) {
         return this.connection.promise().query(`INSERT INTO department(name) VALUES (?)`, name)
@@ -49,8 +65,8 @@ class EmployeesDB {
         return this.connection.promise().query(`INSERT INTO role(role.title, role.salary, role.department_id) VALUES(?,?,?)`, [role, salary, departmentId]);
     }
 
-    addingEmployee(first, last, role, manager) {
-
+    addingEmployee(first, last, roleId, managerId) {
+        return this.connection.promise().query(`INSERT INTO employee(employee.first_name, employee.last_name, employee.role_id, employee.manager_id) VALUES (?,?,?,?)`, [first, last, roleId, managerId]);
     }
 }
 
