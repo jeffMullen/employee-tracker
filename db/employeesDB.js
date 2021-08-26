@@ -34,7 +34,7 @@ class EmployeesDB {
     // }
 
     viewingEmployees() {
-        return this.connection.promise().query(`SELECT employee.id AS ID,
+        return this.connection.promise().query(`SELECT employee.id AS Id,
         employee.first_name AS First,
         employee.last_name AS Last,
         role.title AS Role,
