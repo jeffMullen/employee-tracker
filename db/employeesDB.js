@@ -40,7 +40,7 @@ class EmployeesDB {
         role.title AS Role,
         department.name AS Department,
         role.salary AS Salary,
-        MyManager.first_name AS Manager
+        CONCAT(MyManager.first_name, ' ', MyManager.last_name) AS Manager
         FROM employee
         JOIN role ON employee.role_id = role.id
         JOIN department ON role.department_id = department.id
