@@ -21,18 +21,6 @@ class EmployeesDB {
         ON role.department_id = department.id`)
     }
 
-    // viewingEmployees() {
-    //     return this.connection.promise().query(`SELECT employee.id AS Id,
-    //     employee.first_name AS First,
-    //     employee.last_name AS Last,
-    //     role.title AS Title,
-    //     department.name AS Department,
-    //     role.salary AS Salary,
-    //     employee.manager_id AS Manager
-    //     FROM employee JOIN role ON employee.role_id = role.id
-    //     JOIN department ON role.id = department.id`)
-    // }
-
     viewingEmployees() {
         return this.connection.promise().query(`SELECT employee.id AS Id,
         employee.first_name AS First,
@@ -46,9 +34,6 @@ class EmployeesDB {
         JOIN department ON role.department_id = department.id
         LEFT JOIN employee MyManager on MyManager.id = employee.manager_id`)
     }
-    // viewingEmployees() {
-    //     return this.connection.promise().query(`SELECT * FROM employee`);
-    // }
 
     addingDepartment(name) {
         return this.connection.promise().query(`INSERT INTO department(name) VALUES (?)`, name)
@@ -62,6 +47,10 @@ class EmployeesDB {
         return this.connection.promise().query(`SELECT role.title FROM role`)
     }
 
+    getRoleId() {
+        return this.connection.promise().query(`SELECT * FROM role`)
+    }
+
     addingRole(role, salary, departmentId) {
         return this.connection.promise().query(`INSERT INTO role(role.title, role.salary, role.department_id) VALUES(?,?,?)`, [role, salary, departmentId]);
     }
@@ -72,6 +61,16 @@ class EmployeesDB {
 
     getEmployees() {
         return this.connection.promise().query(`SELECT employee.first_name, employee.last_name FROM employee`);
+    }
+
+    getEmployeeId() {
+        return this.connection.promise().query(`SELECT * FROM employee`)
+    }
+
+    updatingEmployee(employeeId, roleId) {
+        return this.connection.promise().query(`UPDATE employee
+        SET role_id = ?
+        WHERE id = ?`, [roleId, employeeId]);
     }
 }
 
