@@ -2,7 +2,9 @@ const inquirer = require('inquirer');
 const addDepartment = require('./addDepartment');
 const addRole = require('./addRole');
 const addEmployee = require('./addEmployee');
+const updateEmployee = require('./updateEmployee');
 const tables = require('./viewTables');
+
 
 const menu = [
     {
@@ -30,6 +32,8 @@ const mainMenu = () => {
                 addRole();
             } else if (response.menu === 'Add an employee') {
                 addEmployee();
+            } else if (response.menu === 'Update an employee role') {
+                updateEmployee();
             }
         })
 };

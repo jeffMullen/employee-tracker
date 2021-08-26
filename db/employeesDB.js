@@ -40,10 +40,11 @@ class EmployeesDB {
         role.title AS Role,
         department.name AS Department,
         role.salary AS Salary,
-        employee.manager_id AS Manager
+        MyManager.first_name AS Manager
         FROM employee
         JOIN role ON employee.role_id = role.id
-        JOIN department ON role.department_id = department.id`)
+        JOIN department ON role.department_id = department.id
+        LEFT JOIN employee MyManager on MyManager.id = employee.manager_id`)
     }
     // viewingEmployees() {
     //     return this.connection.promise().query(`SELECT * FROM employee`);
@@ -67,6 +68,10 @@ class EmployeesDB {
 
     addingEmployee(first, last, roleId, managerId) {
         return this.connection.promise().query(`INSERT INTO employee(employee.first_name, employee.last_name, employee.role_id, employee.manager_id) VALUES (?,?,?,?)`, [first, last, roleId, managerId]);
+    }
+
+    getEmployees() {
+        return this.connection.promise().query(`SELECT employee.first_name, employee.last_name FROM employee`);
     }
 }
 
