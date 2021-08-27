@@ -55,8 +55,8 @@ class EmployeesDB {
         return this.connection.promise().query(`INSERT INTO role(role.title, role.salary, role.department_id) VALUES(?,?,?)`, [role, salary, departmentId]);
     }
 
-    addingEmployee(first, last, roleId, managerId) {
-        return this.connection.promise().query(`INSERT INTO employee(employee.first_name, employee.last_name, employee.role_id, employee.manager_id) VALUES (?,?,?,?)`, [first, last, roleId, managerId]);
+    addingEmployee(first, last, roleId, manager) {
+        return this.connection.promise().query(`INSERT INTO employee(employee.first_name, employee.last_name, employee.role_id, employee.manager_id) VALUES (?,?,?,?)`, [first, last, roleId, manager]);
     }
 
     getEmployees() {

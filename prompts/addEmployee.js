@@ -2,19 +2,18 @@ const inquirer = require('inquirer');
 const employeesDB = require('../db/employeesDB');
 
 const addEmployee = () => {
+    // Getting an array of roles to use in the prompt
     employeesDB.getRoles().then(data => {
         const roleChoices = data[0];
         let roleArray = [];
         for (let i = 0; i < roleChoices.length; i++) {
             roleArray.push(roleChoices[i].title);
         }
-        console.log(roleArray);
         employeePrompt(roleArray);
     })
 };
 
 const employeePrompt = (roleArray) => {
-    console.log(roleArray);
     const employee = [
         {
             type: 'input',
@@ -34,7 +33,7 @@ const employeePrompt = (roleArray) => {
         },
         {
             type: 'input',
-            message: 'Who is the employee\'s manager?',
+            message: 'Who is the employee\'s manager? Enter Id:',
             name: 'manager'
         }
     ];
@@ -42,47 +41,29 @@ const employeePrompt = (roleArray) => {
     inquirer
         .prompt(employee)
         .then(response => {
-            console.log(response);
-            const { firstName, lastName, employeeRole, manager } = response;
-            // First name, Last name, Role(From role table[logic here]), manager
-            let roleId;
-            employeesDB.viewingRoles().then(data => {
-                console.log(`DATA ${data}`);
-                let newData = data[0];
-                console.log(`NEW DATA ${newData}`);
-                for (let i = 0; i < newData.length; i++) {
-                    if (employeeRole === newData[i].Title) {
-                        roleId = newData[i].Id;
-                        break;
-                    }
-                }
-
-                console.log(roleId);
-                getManager(firstName, lastName, roleId, manager);
-            })
+            convertRoleId(response);
         })
 }
 
-const getManager = (firstName, lastName, roleId, manager) => {
-    let managerId;
-    employeesDB.viewingEmployees().then(results => {
-        console.log(results[0]);
-        let newResults = results[0];
-        for (let i = 0; i < newResults.length; i++) {
-            if (manager === `${newResults[i].First} ${newResults[i].Last}`) {
-                managerId = newResults[i].Id;
+// Converting role name into a role id to be entered into the employee table
+const convertRoleId = (response) => {
+    const { firstName, lastName, employeeRole, manager } = response;
+    let roleId;
+    employeesDB.viewingRoles().then(data => {
+        let newData = data[0];
+        for (let i = 0; i < newData.length; i++) {
+            if (employeeRole === newData[i].Title) {
+                roleId = newData[i].Id;
+                break;
             }
         }
-        console.log(managerId);
-        finalEntry(firstName, lastName, roleId, managerId);
+        finalEntry(firstName, lastName, roleId, manager);
     })
-
 }
 
-const finalEntry = (firstName, lastName, roleId, managerId) => {
-    console.log(roleId);
-    console.log(managerId);
-    employeesDB.addingEmployee(firstName, lastName, roleId, managerId).then(results => {
+// Sending all processed data to the database query.  Then printing employee table
+const finalEntry = (firstName, lastName, roleId, manager) => {
+    employeesDB.addingEmployee(firstName, lastName, roleId, manager).then(results => {
         if (results[0].affectedRows) {
             console.log('Employee added!');
         }
