@@ -2,12 +2,14 @@ const inquirer = require('inquirer');
 const employeesDB = require('../db/employeesDB');
 
 const addRole = () => {
+    // Getting department names to use as prompt choices
     employeesDB.getDepartments().then(data => {
         const departmentChoices = data[0];
         rolePrompt(departmentChoices);
     })
 }
 
+// Inquirer prompt
 const rolePrompt = (departmentChoices) => {
     const role = [
         {
@@ -31,24 +33,29 @@ const rolePrompt = (departmentChoices) => {
     inquirer
         .prompt(role)
         .then(response => {
-            const { role, salary, department } = response;
-            let departmentId;
-
-            employeesDB.viewingDepartments().then(data => {
-                let newData = data[0];
-                for (let i = 0; i < newData.length; i++) {
-                    if (department === newData[i].Department) {
-                        departmentId = newData[i].Id;
-                        break;
-                    }
-                }
-                finalEntry(role, salary, departmentId);
-
-            })
+            convertDepartment(response);
         })
 }
 
+// Converting department name into department id
+const convertDepartment = (response) => {
+    const { role, salary, department } = response;
+    let departmentId;
 
+    employeesDB.viewingDepartments().then(data => {
+        let newData = data[0];
+        for (let i = 0; i < newData.length; i++) {
+            if (department === newData[i].Department) {
+                departmentId = newData[i].Id;
+                break;
+            }
+        }
+        finalEntry(role, salary, departmentId);
+
+    })
+}
+
+// Adding role to database
 const finalEntry = (role, salary, departmentId) => {
     employeesDB.addingRole(role, salary, departmentId).then(data => {
         if (data[0].affectedRows) {

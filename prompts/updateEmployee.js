@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const employeesDB = require('../db/employeesDB');
 
 const updateEmployee = () => {
+    // Getting employee names to use in prompt choices
     employeesDB.getEmployees().then(data => {
         const employees = data[0];
         let employeeChoices = [];
@@ -12,6 +13,7 @@ const updateEmployee = () => {
     })
 }
 
+// Getting roles to use in prompt choices
 const gettingRoles = (employeeChoices) => {
     employeesDB.getRoles().then(data => {
         const roleChoices = data[0];
@@ -23,6 +25,7 @@ const gettingRoles = (employeeChoices) => {
     })
 }
 
+// Inquirer prompt
 const updatePrompt = (employeeChoices, roleArray) => {
     const updatingEmployee = [
         {
@@ -46,6 +49,7 @@ const updatePrompt = (employeeChoices, roleArray) => {
         })
 }
 
+// Converting employee name into employee id
 const convertEmployeeId = (response) => {
     let { employee, role } = response;
     employee = employee.split(' ');
@@ -63,6 +67,7 @@ const convertEmployeeId = (response) => {
     })
 }
 
+// Converting role name into role id
 const convertRoleId = (employeeId, role) => {
     let roleId;
     employeesDB.getRoleId().then(data => {
@@ -76,6 +81,7 @@ const convertRoleId = (employeeId, role) => {
     })
 }
 
+// Updating employee role
 const finalQuery = (employeeId, roleId) => {
     employeesDB.updatingEmployee(employeeId, roleId).then(results => {
         if (results[0].affectedRows) {

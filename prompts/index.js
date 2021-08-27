@@ -15,6 +15,7 @@ const menu = [
     }
 ];
 
+// Main menu inquirer prompt
 const mainMenu = () => {
     inquirer
         .prompt(menu)

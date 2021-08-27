@@ -13,6 +13,7 @@ const addEmployee = () => {
     })
 };
 
+// Inquirer prompt
 const employeePrompt = (roleArray) => {
     const employee = [
         {
@@ -33,7 +34,7 @@ const employeePrompt = (roleArray) => {
         },
         {
             type: 'input',
-            message: 'Who is the employee\'s manager? Enter Id:',
+            message: 'Who is the employee\'s manager? Enter id:\n Leave blank if the employee has no manager:',
             name: 'manager'
         }
     ];
@@ -47,7 +48,11 @@ const employeePrompt = (roleArray) => {
 
 // Converting role name into a role id to be entered into the employee table
 const convertRoleId = (response) => {
-    const { firstName, lastName, employeeRole, manager } = response;
+    let { firstName, lastName, employeeRole, manager } = response;
+    if (manager === '') {
+        manager = null;
+    }
+
     let roleId;
     employeesDB.viewingRoles().then(data => {
         let newData = data[0];
@@ -61,7 +66,7 @@ const convertRoleId = (response) => {
     })
 }
 
-// Sending all processed data to the database query.  Then printing employee table
+// Sending all processed employee data to the database
 const finalEntry = (firstName, lastName, roleId, manager) => {
     employeesDB.addingEmployee(firstName, lastName, roleId, manager).then(results => {
         if (results[0].affectedRows) {

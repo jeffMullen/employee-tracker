@@ -9,12 +9,14 @@ const department = [
     }
 ];
 
+// Inquirer prompt
 const addDepartment = () => {
     inquirer
         .prompt(department)
         .then(response => {
             const name = response.department;
 
+            // Adding department to the database
             employeesDB.addingDepartment(name).then(data => {
                 if (data[0].affectedRows) {
                     console.log('Department added!');

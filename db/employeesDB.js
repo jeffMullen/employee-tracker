@@ -4,13 +4,14 @@ class EmployeesDB {
     constructor(connection) {
         this.connection = connection;
     }
-
+    // View formatted departments table
     viewingDepartments() {
         return this.connection.promise().query(`SELECT department.id AS Id,
         department.name AS Department
         FROM department`)
     }
 
+    // View formatted roles table
     viewingRoles() {
         return this.connection.promise().query(`SELECT role.id AS Id,
         role.title AS Title,
@@ -21,6 +22,7 @@ class EmployeesDB {
         ON role.department_id = department.id`)
     }
 
+    // View formatted employees table
     viewingEmployees() {
         return this.connection.promise().query(`SELECT employee.id AS Id,
         employee.first_name AS First,
@@ -35,38 +37,51 @@ class EmployeesDB {
         LEFT JOIN employee MyManager on MyManager.id = employee.manager_id`)
     }
 
+    // --------------- 'addDepartment.js METHOD' ---------------
+    // Add department to the database
     addingDepartment(name) {
         return this.connection.promise().query(`INSERT INTO department(name) VALUES (?)`, name)
     }
 
+    // --------------- 'addRole.js' METHODS ---------------
+    // Getting department names to use for prompt choices
     getDepartments() {
         return this.connection.promise().query(`SELECT department.name FROM department`)
     }
 
-    getRoles() {
-        return this.connection.promise().query(`SELECT role.title FROM role`)
-    }
-
-    getRoleId() {
-        return this.connection.promise().query(`SELECT * FROM role`)
-    }
-
+    // Add role to database
     addingRole(role, salary, departmentId) {
         return this.connection.promise().query(`INSERT INTO role(role.title, role.salary, role.department_id) VALUES(?,?,?)`, [role, salary, departmentId]);
     }
 
+    // --------------- 'addEmployee.js METHODS ---------------
+    // Getting role names to use for prompt choices
+    getRoles() {
+        return this.connection.promise().query(`SELECT role.title FROM role`)
+    }
+
+    // Add employee to database
     addingEmployee(first, last, roleId, manager) {
         return this.connection.promise().query(`INSERT INTO employee(employee.first_name, employee.last_name, employee.role_id, employee.manager_id) VALUES (?,?,?,?)`, [first, last, roleId, manager]);
     }
 
+    // --------------- 'updateEmployee.js' METHODS ---------------
+    // Getting role data to convert role name into role id
+    getRoleId() {
+        return this.connection.promise().query(`SELECT * FROM role`)
+    }
+
+    // Getting employee names to use as prompt choices
     getEmployees() {
         return this.connection.promise().query(`SELECT employee.first_name, employee.last_name FROM employee`);
     }
 
+    // Getting employee data to convert employee name to employee id
     getEmployeeId() {
         return this.connection.promise().query(`SELECT * FROM employee`)
     }
 
+    // Updating employee role
     updatingEmployee(employeeId, roleId) {
         return this.connection.promise().query(`UPDATE employee
         SET role_id = ?
