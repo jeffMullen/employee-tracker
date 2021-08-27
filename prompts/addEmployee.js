@@ -49,11 +49,8 @@ const employeePrompt = (roleArray) => {
 // Converting role name into a role id to be entered into the employee table
 const convertRoleId = (response) => {
     let { firstName, lastName, employeeRole, manager } = response;
-    if (manager === '') {
-        manager = null;
-    }
-
     let roleId;
+
     employeesDB.viewingRoles().then(data => {
         let newData = data[0];
         for (let i = 0; i < newData.length; i++) {
@@ -62,6 +59,18 @@ const convertRoleId = (response) => {
                 break;
             }
         }
+        checkEmployeeIds(firstName, lastName, roleId, manager);
+    })
+}
+
+const checkEmployeeIds = (firstName, lastName, roleId, manager) => {
+    employeesDB.getEmployeeId().then(data => {
+        const employees = data[0].map(id => {
+            return id.id;
+        });
+        if (employees.includes(parseInt(manager)) === false) {
+            manager = null;
+        };
         finalEntry(firstName, lastName, roleId, manager);
     })
 }
