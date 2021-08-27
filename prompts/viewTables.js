@@ -1,5 +1,5 @@
 
-const employeesDB = require('../db/employeesDB');
+// const employeesDB = require('../db/employeesDB');
 
 
 // const viewDepartments = () => {
@@ -8,6 +8,7 @@ const employeesDB = require('../db/employeesDB');
 //         console.table(results[0])
 
 //     });
+
 // }
 
 // const viewRoles = () => {
@@ -19,7 +20,7 @@ const employeesDB = require('../db/employeesDB');
 // }
 
 // module.exports = {
-//     //  viewDepartments,
-//     viewEmployees,
-//     viewRoles
+//     viewDepartments,
+//     // viewEmployees,
+//     // viewRoles
 // }
