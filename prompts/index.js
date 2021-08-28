@@ -88,6 +88,7 @@ const addDepartment = () => {
                 if (data[0].affectedRows) {
                     console.log('Department added!');
                 }
+                mainMenu();
             })
         })
 };
@@ -174,6 +175,7 @@ const finalEntry = (firstName, lastName, roleId, manager) => {
         if (results[0].affectedRows) {
             console.log('Employee added!');
         }
+        mainMenu();
     })
 }
 
@@ -229,6 +231,7 @@ const finalEntryRole = ({ role, salary, department }) => {
         if (data[0].affectedRows) {
             console.log('Role added!');
         }
+        mainMenu();
     });
 }
 
@@ -319,6 +322,7 @@ const finalQuery = (employeeId, roleId) => {
         if (results[0].affectedRows) {
             console.log('Employee updated!');
         };
+        mainMenu();
     })
 }
 
