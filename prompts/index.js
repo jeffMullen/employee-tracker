@@ -79,7 +79,9 @@ const addDepartment = () => {
             // Adding department to the database
             employeesDB.addingDepartment(name).then(data => {
                 if (data[0].affectedRows) {
+                    console.log('\n');
                     console.log('Department added!');
+                    console.log('\n');
                 }
                 mainMenu();
             })
@@ -95,7 +97,6 @@ const addEmployee = () => {
             name: role.Title,
             value: role.Id
         }));
-        console.log(roleChoices);
         employeePrompt(roleChoices);
     })
 };
@@ -133,24 +134,6 @@ const employeePrompt = (roleChoices) => {
         })
 }
 
-// Converting role name into a role id to be entered into the employee table
-// const convertRoleId = ({ firstName, lastName, employeeRole, manager }) => {
-// let { firstName, lastName, employeeRole, manager } = response;
-// let roleId;
-
-// employeesDB.viewingRoles().then(data => {
-//     let newData = data[0];
-//     for (let i = 0; i < newData.length; i++) {
-//         if (employeeRole === newData[i].Title) {
-//             roleId = newData[i].Id;
-//             break;
-//         }
-//     }
-//     checkEmployeeIds(firstName, lastName, roleId, manager);
-// })
-
-// }
-
 // If manager !== a current employee id, set manager id to null
 const checkEmployeeIds = ({ firstName, lastName, employeeRole, manager }, roleChoices) => {
     const employees = roleChoices.map(id => {
@@ -166,7 +149,9 @@ const checkEmployeeIds = ({ firstName, lastName, employeeRole, manager }, roleCh
 const finalEntry = (firstName, lastName, employeeRole, manager) => {
     employeesDB.addingEmployee(firstName, lastName, employeeRole, manager).then(results => {
         if (results[0].affectedRows) {
+            console.log('\n');
             console.log('Employee added!');
+            console.log('\n');
         }
         mainMenu();
     })
@@ -217,7 +202,9 @@ const rolePrompt = (departmentChoices) => {
 const finalEntryRole = ({ role, salary, department }) => {
     employeesDB.addingRole(role, salary, department).then(data => {
         if (data[0].affectedRows) {
+            console.log('\n');
             console.log('Role added!');
+            console.log('\n');
         }
         mainMenu();
     });
@@ -227,41 +214,39 @@ const finalEntryRole = ({ role, salary, department }) => {
 // UPDATE EMPLOYEE
 const updateEmployee = () => {
     // Getting employee names to use in prompt choices
-    employeesDB.getEmployees().then(data => {
-        const employees = data[0];
-        let employeeChoices = [];
-        for (let i = 0; i < employees.length; i++) {
-            employeeChoices.push(`${employees[i].first_name} ${employees[i].last_name}`);
-        }
-        gettingRoles(employeeChoices);
+    employeesDB.viewingEmployees().then(data => {
+        const employees = data[0].map(person => ({
+            name: `${person.First} ${person.Last}`,
+            value: person.Id
+        }));
+        gettingRoles(employees);
     })
 }
 
 // Getting roles to use in prompt choices
-const gettingRoles = (employeeChoices) => {
-    employeesDB.getRoles().then(data => {
-        const roleChoices = data[0];
-        let roleArray = [];
-        for (let i = 0; i < roleChoices.length; i++) {
-            roleArray.push(roleChoices[i].title);
-        }
-        updatePrompt(employeeChoices, roleArray);
+const gettingRoles = (employees) => {
+    employeesDB.viewingRoles().then(data => {
+        const roleChoices = data[0].map(role => ({
+            name: role.Title,
+            value: role.Id
+        }));
+        updatePrompt(employees, roleChoices);
     })
 }
 
 // Inquirer prompt
-const updatePrompt = (employeeChoices, roleArray) => {
+const updatePrompt = (employees, roleChoices) => {
     const updatingEmployee = [
         {
             type: 'list',
             message: 'Which employee\'s role do you want to update?',
-            choices: employeeChoices,
+            choices: employees,
             name: 'employee'
         },
         {
             type: 'list',
             message: 'Which role do you want to assign the selected employee?',
-            choices: roleArray,
+            choices: roleChoices,
             name: 'role'
         }
     ]
@@ -269,47 +254,17 @@ const updatePrompt = (employeeChoices, roleArray) => {
     inquirer
         .prompt(updatingEmployee)
         .then(response => {
-            convertEmployeeId(response);
+            finalQuery(response);
         })
 }
 
-// Converting employee name into employee id
-const convertEmployeeId = (response) => {
-    let { employee, role } = response;
-    employee = employee.split(' ');
-
-    let employeeId;
-    employeesDB.getEmployeeId().then(data => {
-        const employees = data[0];
-        for (let i = 0; i < employees.length; i++) {
-            if (employee[0] === employees[i].first_name && employee[1] === employees[i].last_name) {
-                employeeId = employees[i].id;
-            }
-        }
-
-        convertRoleIdUpdate(employeeId, role);
-    })
-}
-
-// Converting role name into role id
-const convertRoleIdUpdate = (employeeId, role) => {
-    let roleId;
-    employeesDB.getRoleId().then(data => {
-        const roles = data[0];
-        for (let i = 0; i < roles.length; i++) {
-            if (role === roles[i].title) {
-                roleId = roles[i].id;
-            }
-        }
-        finalQuery(employeeId, roleId);
-    })
-}
-
 // Updating employee role
-const finalQuery = (employeeId, roleId) => {
-    employeesDB.updatingEmployee(employeeId, roleId).then(results => {
+const finalQuery = ({ employee, role }) => {
+    employeesDB.updatingEmployee(employee, role).then(results => {
         if (results[0].affectedRows) {
+            console.log('\n');
             console.log('Employee updated!');
+            console.log('\n');
         };
         mainMenu();
     })
