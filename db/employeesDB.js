@@ -61,8 +61,8 @@ class EmployeesDB {
     }
 
     // Add employee to database
-    addingEmployee(first, last, roleId, manager) {
-        return this.connection.promise().query(`INSERT INTO employee(employee.first_name, employee.last_name, employee.role_id, employee.manager_id) VALUES (?,?,?,?)`, [first, last, roleId, manager]);
+    addingEmployee(first, last, employeeRole, manager) {
+        return this.connection.promise().query(`INSERT INTO employee(employee.first_name, employee.last_name, employee.role_id, employee.manager_id) VALUES (?,?,?,?)`, [first, last, employeeRole, manager]);
     }
 
     // --------------- 'updateEmployee.js' METHODS ---------------

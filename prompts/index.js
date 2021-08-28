@@ -1,12 +1,5 @@
 const inquirer = require('inquirer');
-// const addDepartment = require('./addDepartment');
-// const addRole = require('./addRole');
-// const addEmployee = require('./addEmployee');
-// const updateEmployee = require('./updateEmployee');
-const tables = require('./viewTables');
 const employeesDB = require('../db/employeesDB');
-
-
 
 const menu = [
     {
@@ -23,8 +16,7 @@ const mainMenu = () => {
         .prompt(menu)
         .then(response => {
             if (response.menu === 'View all departments') {
-                viewDepartmentsCall();
-                // mainMenu();
+                viewDepartments();
             } else if (response.menu === 'View all roles') {
                 viewRoles();
             } else if (response.menu === 'View all employees') {
@@ -41,16 +33,16 @@ const mainMenu = () => {
         })
 };
 
-const viewDepartmentsCall = () => {
+// VIEW DEPARTMENTS TABLE
+const viewDepartments = () => {
     employeesDB.viewingDepartments().then(results => {
         console.log('\n');
         console.table(results[0])
         mainMenu();
-
     });
-
 }
 
+// VIEW ROLES TABLE
 const viewRoles = () => {
     employeesDB.viewingRoles().then(results => {
         console.log('\n');
@@ -59,6 +51,7 @@ const viewRoles = () => {
     });
 };
 
+// VIEW EMPLOYEES TABLE
 const viewEmployees = () => {
     employeesDB.viewingEmployees().then(results => {
         console.log('\n');
@@ -76,7 +69,7 @@ const department = [
     }
 ];
 
-// Inquirer prompt
+// Department prompt
 const addDepartment = () => {
     inquirer
         .prompt(department)
@@ -93,21 +86,22 @@ const addDepartment = () => {
         })
 };
 
+
 // ADD EMPLOYEE
 const addEmployee = () => {
     // Getting an array of roles to use in the prompt
-    employeesDB.getRoles().then(data => {
-        const roleChoices = data[0];
-        let roleArray = [];
-        for (let i = 0; i < roleChoices.length; i++) {
-            roleArray.push(roleChoices[i].title);
-        }
-        employeePrompt(roleArray);
+    employeesDB.viewingRoles().then(data => {
+        const roleChoices = data[0].map(role => ({
+            name: role.Title,
+            value: role.Id
+        }));
+        console.log(roleChoices);
+        employeePrompt(roleChoices);
     })
 };
 
-// Inquirer prompt
-const employeePrompt = (roleArray) => {
+// Employee prompt
+const employeePrompt = (roleChoices) => {
     const employee = [
         {
             type: 'input',
@@ -122,7 +116,7 @@ const employeePrompt = (roleArray) => {
         {
             type: 'list',
             message: 'What is the employee\'s role?',
-            choices: roleArray,
+            choices: roleChoices,
             name: 'employeeRole'
         },
         {
@@ -135,43 +129,42 @@ const employeePrompt = (roleArray) => {
     inquirer
         .prompt(employee)
         .then(response => {
-            convertRoleId(response);
+            checkEmployeeIds(response, roleChoices);
         })
 }
 
 // Converting role name into a role id to be entered into the employee table
-const convertRoleId = (response) => {
-    let { firstName, lastName, employeeRole, manager } = response;
-    let roleId;
+// const convertRoleId = ({ firstName, lastName, employeeRole, manager }) => {
+// let { firstName, lastName, employeeRole, manager } = response;
+// let roleId;
 
-    employeesDB.viewingRoles().then(data => {
-        let newData = data[0];
-        for (let i = 0; i < newData.length; i++) {
-            if (employeeRole === newData[i].Title) {
-                roleId = newData[i].Id;
-                break;
-            }
-        }
-        checkEmployeeIds(firstName, lastName, roleId, manager);
-    })
-}
+// employeesDB.viewingRoles().then(data => {
+//     let newData = data[0];
+//     for (let i = 0; i < newData.length; i++) {
+//         if (employeeRole === newData[i].Title) {
+//             roleId = newData[i].Id;
+//             break;
+//         }
+//     }
+//     checkEmployeeIds(firstName, lastName, roleId, manager);
+// })
+
+// }
 
 // If manager !== a current employee id, set manager id to null
-const checkEmployeeIds = (firstName, lastName, roleId, manager) => {
-    employeesDB.getEmployeeId().then(data => {
-        const employees = data[0].map(id => {
-            return id.id;
-        });
-        if (employees.includes(parseInt(manager)) === false) {
-            manager = null;
-        };
-        finalEntry(firstName, lastName, roleId, manager);
+const checkEmployeeIds = ({ firstName, lastName, employeeRole, manager }, roleChoices) => {
+    const employees = roleChoices.map(id => {
+        return id.value;
     })
+    if (employees.includes(parseInt(manager)) === false) {
+        manager = null;
+    };
+    finalEntry(firstName, lastName, employeeRole, manager);
 }
 
 // Sending all processed employee data to the database
-const finalEntry = (firstName, lastName, roleId, manager) => {
-    employeesDB.addingEmployee(firstName, lastName, roleId, manager).then(results => {
+const finalEntry = (firstName, lastName, employeeRole, manager) => {
+    employeesDB.addingEmployee(firstName, lastName, employeeRole, manager).then(results => {
         if (results[0].affectedRows) {
             console.log('Employee added!');
         }
@@ -179,15 +172,15 @@ const finalEntry = (firstName, lastName, roleId, manager) => {
     })
 }
 
+
 // ADD ROLE
 const addRole = () => {
-    // Getting department names to use as prompt choices
+    // Getting department names and ids to use as prompt choices
     employeesDB.viewingDepartments().then(data => {
         const departmentChoices = data[0].map(name => ({
             name: name.Department,
             value: name.Id
         }));
-        console.log(departmentChoices);
         rolePrompt(departmentChoices);
     })
 }
@@ -209,7 +202,6 @@ const rolePrompt = (departmentChoices) => {
             type: 'list',
             message: 'Which department does this role belong to?',
             choices: departmentChoices,
-            //  [{name: asdasd, value: 1}]
             name: 'department'
         }
     ];
@@ -217,16 +209,12 @@ const rolePrompt = (departmentChoices) => {
     inquirer
         .prompt(role)
         .then(response => {
-            console.log(response)
-            //convertDepartment(response);
             finalEntryRole(response);
         })
 }
 
 // Adding role to database
 const finalEntryRole = ({ role, salary, department }) => {
-
-
     employeesDB.addingRole(role, salary, department).then(data => {
         if (data[0].affectedRows) {
             console.log('Role added!');
@@ -234,6 +222,7 @@ const finalEntryRole = ({ role, salary, department }) => {
         mainMenu();
     });
 }
+
 
 // UPDATE EMPLOYEE
 const updateEmployee = () => {
