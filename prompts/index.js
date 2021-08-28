@@ -22,7 +22,6 @@ const mainMenu = () => {
     inquirer
         .prompt(menu)
         .then(response => {
-            console.log(response);
             if (response.menu === 'View all departments') {
                 viewDepartmentsCall();
                 // mainMenu();
@@ -44,19 +43,17 @@ const mainMenu = () => {
 
 const viewDepartmentsCall = () => {
     employeesDB.viewingDepartments().then(results => {
-
+        console.log('\n');
         console.table(results[0])
         mainMenu();
 
     });
 
-    viewDepartments();
-
-    mainMenu();
 }
 
 const viewRoles = () => {
     employeesDB.viewingRoles().then(results => {
+        console.log('\n');
         console.table(results[0])
         mainMenu();
     });
@@ -64,11 +61,13 @@ const viewRoles = () => {
 
 const viewEmployees = () => {
     employeesDB.viewingEmployees().then(results => {
+        console.log('\n');
         console.table(results[0])
         mainMenu();
     });
 }
 
+// ADD DEPARTMENT
 const department = [
     {
         type: 'input',
@@ -77,7 +76,6 @@ const department = [
     }
 ];
 
-// ADD DEPARTMENT
 // Inquirer prompt
 const addDepartment = () => {
     inquirer
